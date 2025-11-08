@@ -26,6 +26,6 @@ public class Estudiante implements Comparable<Estudiante>{
 
     @Override
     public String toString() {
-        return "Estudiante{id=" + id + ", puntaje=" + puntaje + "}";
+        return "id=" + id + "; " + "puntaje=" + puntaje;
     }
 }
