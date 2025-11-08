@@ -1,0 +1,31 @@
+package aed;
+
+public class Estudiante implements Comparable<Estudiante>{
+    int id;
+    int referencia;
+    int puntaje;
+
+    boolean entrego;
+    boolean sospechoso;
+
+    Estudiante(int id){
+        this.id = id;
+        this.puntaje = 0;
+        this.entrego = false;
+        this.sospechoso = false;
+    }
+
+    
+    public int compareTo(Estudiante otro) {
+        int comparar = Integer.compare(this.puntaje, otro.puntaje);
+        if (comparar != 0) {
+            return comparar;
+        }
+        return Integer.compare(this.id, otro.id);
+    }
+
+    @Override
+    public String toString() {
+        return "Estudiante{id=" + id + ", puntaje=" + puntaje + "}";
+    }
+}
