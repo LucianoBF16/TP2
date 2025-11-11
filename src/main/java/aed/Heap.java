@@ -153,18 +153,6 @@ public class Heap<T extends Comparable<T>>{
         arrayHandles[pos].posicion = pos;
         arrayHandles[posicionFinal] = null;
 
-        /* 
-        arrayHeap[pos] = arrayHeap[posicionFinal]; // O(1)
-        arrayHeap[posicionFinal] = null; // O(1)
-
-        Handle temporalHandle = arrayHandles[pos]; // O(1)
-        arrayHandles[pos] = arrayHandles[posicionFinal]; // O(1)
-        arrayHandles[posicionFinal] = temporalHandle; // O(1)
-        
-        arrayHandles[pos].posicion = pos; // O(1)
-        arrayHandles[posicionFinal].posicion = posicionFinal; // O(1)
-        */
-
         heapify(pos); //O(log n)
         capacidad --; //O(1)
     }

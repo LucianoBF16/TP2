@@ -61,35 +61,24 @@ public class Edr {
 
 
     public void copiarse(int estudiante) {
-        int cantidadAlumnosPorFila = dimensionAula - (dimensionAula/2); //O(1)
-        int vecinoIzquierdo = -1; //O(1)
-        int vecinoDerecho = -1; //O(1)
-        int vecinoFrente = estudiante - cantidadAlumnosPorFila; //O(1)
-
-        if (estudiante % cantidadAlumnosPorFila == 0){ //O(1)
-            vecinoDerecho = estudiante + 1; //O(1)
-        }
-        else if ((estudiante + 1) % cantidadAlumnosPorFila == 0){ //O(1)
-            vecinoIzquierdo = estudiante - 1; //O(1)
-        }
-        else{ //O(1)
-            vecinoDerecho = estudiante + 1; //O(1)
-            vecinoIzquierdo = estudiante - 1; //O(1)
-        }
+        int cantidadAlumnosPorFila = dimensionAula - (dimensionAula / 2);
+        int vecinoIzquierdo = (estudiante % cantidadAlumnosPorFila == 0) ? -1 : estudiante - 1;
+        int vecinoDerecho = (((estudiante + 1) % cantidadAlumnosPorFila == 0)) ? -1 : estudiante + 1;
+        int vecinoFrente = estudiante - cantidadAlumnosPorFila;
 
         int[] cantidadRespuestasDistintas = new int[3]; //O(1)
-           
-        if(vecinoIzquierdo >= 0){ //O(1) 
+
+        if(vecinoFrente >= 0){ //O(1)
             for(int i = 0; i < estudiantes[estudiante].examen.length; i++){ //O(R)
-                if (estudiantes[estudiante].examen[i] != estudiantes[vecinoIzquierdo].examen[i] && estudiantes[vecinoIzquierdo].examen[i] != -1){ //O(1)
+                if (estudiantes[estudiante].examen[i] != estudiantes[vecinoFrente].examen[i] && estudiantes[vecinoFrente].examen[i] != -1){ //O(1)
                     cantidadRespuestasDistintas[0]++; //O(1)
                 }
             }
         }
-        
-        if(vecinoFrente >= 0){ //O(1)
+           
+        if(vecinoIzquierdo >= 0){ //O(1) 
             for(int i = 0; i < estudiantes[estudiante].examen.length; i++){ //O(R)
-                if (estudiantes[estudiante].examen[i] != estudiantes[vecinoFrente].examen[i] && estudiantes[vecinoFrente].examen[i] != -1){ //O(1)
+                if (estudiantes[estudiante].examen[i] != estudiantes[vecinoIzquierdo].examen[i] && estudiantes[vecinoIzquierdo].examen[i] != -1){ //O(1)
                     cantidadRespuestasDistintas[1]++; //O(1)
                 }
             }
@@ -106,13 +95,13 @@ public class Edr {
         int maxNoCoincidencias = -1; //O(1)
         int estudianteACopiar = -1; //O(1)
         
-        if (cantidadRespuestasDistintas[1] > maxNoCoincidencias) { //O(1)
-            maxNoCoincidencias = cantidadRespuestasDistintas[1]; //O(1)
+        if (cantidadRespuestasDistintas[0] > maxNoCoincidencias) { //O(1)
+            maxNoCoincidencias = cantidadRespuestasDistintas[0]; //O(1)
             estudianteACopiar = vecinoFrente; //O(1)
         }
 
-        if (cantidadRespuestasDistintas[0] > maxNoCoincidencias) { //O(1)
-            maxNoCoincidencias = cantidadRespuestasDistintas[0]; //O(1)
+        if (cantidadRespuestasDistintas[1] > maxNoCoincidencias) { //O(1)
+            maxNoCoincidencias = cantidadRespuestasDistintas[1]; //O(1)
             estudianteACopiar = vecinoIzquierdo; //O(1)
         }
 
@@ -124,8 +113,10 @@ public class Edr {
         if (maxNoCoincidencias == 0){ //O(1)
             return; //O(1)
         }
-    
-        for(int i = 0; i < estudiantes[estudiante].examen.length; i++){ //O(R)
+        
+        boolean noSeCopio = true; //O(1)
+        int i = 0; //O(1)
+        while(noSeCopio && i < estudiantes[estudiante].examen.length){ //O(R)
             if(estudiantes[estudiante].examen[i] == -1 && estudiantes[estudianteACopiar].examen[i] != -1){ //O(1)
                 estudiantes[estudiante].examen[i] = estudiantes[estudianteACopiar].examen[i]; //O(1)
                 if (solucionExamen[i] == estudiantes[estudiante].examen[i]){ //O(1)
@@ -134,8 +125,9 @@ public class Edr {
                     //Actualizar el heap
                     handlesEstudiantesHeap[estudiante].actualizarNodo(estudiantes[estudiante]); //O(log E)
                 }
+                noSeCopio = false; //O(1)
             }
-            break; //O(1)
+            i++; //O(1)
         } 
     }  
 
