@@ -296,10 +296,10 @@ class EdrTests {
 
         NotaFinal[] notas_finales = edr_9.corregir();
         NotaFinal[] notas_finales_esperadas = new NotaFinal[]{
+            new NotaFinal(50.0, 3),
             new NotaFinal(0.0, 8),
             new NotaFinal(0.0, 7),
-            new NotaFinal(0.0, 6),
-            new NotaFinal(50.0, 3)
+            new NotaFinal(0.0, 6)
         };
 
         assertTrue(Arrays.equals(notas_finales_esperadas, notas_finales));
@@ -375,10 +375,10 @@ class EdrTests {
         
         notas = edr.notas();
         notas_esperadas = new double[]{10.0, 30.0, 10.0, 10.0};
-        
         assertTrue(Arrays.equals(notas_esperadas, notas));
         
         edr.copiarse(2);
+        
         
         notas = edr.notas();
         notas_esperadas = new double[]{10.0, 30.0, 20.0, 10.0};
@@ -399,13 +399,19 @@ class EdrTests {
         edr.resolver(0, 4, 0);
         edr.resolver(1, 5, 1);
 
-        edr.copiarse(2);
-        
-        notas = edr.notas();
-        notas_esperadas = new double[]{10.0, 30.0, 40.0, 20.0};
         for (int i=0; i < 4; i++){
             System.out.println(edr.estudiante(i).toString());
         }
+
+        edr.copiarse(2);
+
+        
+        for (int i=0; i < 4; i++){
+            System.out.println(edr.estudiante(i).toString());
+        }
+
+        notas = edr.notas();
+        notas_esperadas = new double[]{10.0, 30.0, 40.0, 20.0};
         assertTrue(Arrays.equals(notas_esperadas, notas));
         
         edr.copiarse(3);
@@ -425,8 +431,8 @@ class EdrTests {
 
         NotaFinal[] notas_finales = edr.corregir();
         NotaFinal[] notas_finales_esperadas = new NotaFinal[]{
-            new NotaFinal(10.0, 0),
             new NotaFinal(30.0, 1),
+            new NotaFinal(10.0, 0)
         };
 
         assertTrue(Arrays.equals(notas_finales_esperadas, notas_finales));
@@ -461,10 +467,10 @@ class EdrTests {
 
         NotaFinal[] notas_finales = edr.corregir();
         NotaFinal[] notas_finales_esperadas = new NotaFinal[]{
+            new NotaFinal(100.0, 0),
             new NotaFinal(10.0, 3),
             new NotaFinal(10.0, 2),
             new NotaFinal(10.0, 1),
-            new NotaFinal(100.0, 0),
         };
 
         assertTrue(Arrays.equals(notas_finales_esperadas, notas_finales));
@@ -483,7 +489,7 @@ class EdrTests {
         edr.consultarDarkWeb(3, solucion);
 
         notas = edr.notas();
-        notas_esperadas = new double[]{100.0, 10.0, 100.0, 100.0};
+        notas_esperadas = new double[]{100.0, 100.0, 100.0, 10.0};
 
         assertTrue(Arrays.equals(notas, notas_esperadas));
 
@@ -499,6 +505,27 @@ class EdrTests {
         NotaFinal[] notas_finales_esperadas = new NotaFinal[]{};
 
         assertTrue(Arrays.equals(notas_finales_esperadas, notas_finales));
+    }
+
+    @Test
+    void darkweb_no_incluye_estudiantes_que_entregaron() {
+        int[] solucion = new int[]{0, 1, 2, 3, 4};
+        Edr edr = new Edr(5, 5, solucion);
+        
+        // Estudiante 0 entrega primero (con peor nota)
+        edr.entregar(0);
+        
+        // Estudiantes 1-4 tienen notas bajas
+        edr.resolver(1, 0, 0);
+        edr.resolver(2, 1, 1);
+        edr.resolver(3, 2, 2);
+        edr.resolver(4, 3, 3);
+        
+        edr.consultarDarkWeb(2, solucion);
+        
+        double[] notas = edr.notas();
+        double[] notas_esperadas = new double[]{0.0, 100.0, 100.0, 20.0, 20.0};
+        assertTrue(Arrays.equals(notas_esperadas, notas));
     }
 
     @Test
@@ -538,7 +565,7 @@ class EdrTests {
         edr_8.consultarDarkWeb(2, resolucion_3);
 
         notas = edr_8.notas();
-        notas_esperadas = new double[]{80.0, 70.0, 60.0, 10.0, 10.0, 10.0, 30.0, 30.0};
+        notas_esperadas = new double[]{80.0, 70.0, 60.0, 30.0, 30.0, 10.0, 10.0, 10.0};
 
         assertTrue(Arrays.equals(notas, notas_esperadas));
 
@@ -546,16 +573,16 @@ class EdrTests {
             edr_8.entregar(estudiante);
         }
         int[] copiones = edr_8.chequearCopias();
-        int[] copiones_esperados = new int[]{2,3,4,5};
+        int[] copiones_esperados = new int[]{2,5,6,7};
 
         assertTrue(Arrays.equals(copiones, copiones_esperados));
 
-        NotaFinal[] notas_finales = edr.corregir();
+        NotaFinal[] notas_finales = edr_8.corregir();
         NotaFinal[] notas_finales_esperadas = new NotaFinal[]{
-            new NotaFinal(30.0, 7),
-            new NotaFinal(30.0, 6),
-            new NotaFinal(70.0, 1),
             new NotaFinal(80.0, 0),
+            new NotaFinal(70.0, 1),
+            new NotaFinal(30.0, 4),
+            new NotaFinal(30.0, 3),
             
         };
 
@@ -600,9 +627,9 @@ class EdrTests {
 
         NotaFinal[] notas_finales = edr.corregir();
         NotaFinal[] notas_finales_esperadas = new NotaFinal[]{
+            new NotaFinal(30.0, 0),
             new NotaFinal(10.0, 3),
             new NotaFinal(10.0, 1),
-            new NotaFinal(30.0, 0)
         };
 
         assertTrue(Arrays.equals(notas_finales_esperadas, notas_finales));

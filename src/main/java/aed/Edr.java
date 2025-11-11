@@ -67,6 +67,13 @@ public class Edr {
         int vecinoFrente = estudiante - cantidadAlumnosPorFila;
 
         int[] cantidadRespuestasDistintas = new int[3]; //O(1)
+        if(vecinoDerecho >= 0 && vecinoDerecho < estudiantes.length){ //O(1)
+            for(int i = 0; i < estudiantes[estudiante].examen.length; i++){ //O(R)
+                if (estudiantes[estudiante].examen[i] != estudiantes[vecinoDerecho].examen[i] && estudiantes[vecinoDerecho].examen[i] != -1){ //O(1)
+                    cantidadRespuestasDistintas[2]++; //O(1)
+                }
+            }
+        }
 
         if(vecinoFrente >= 0){ //O(1)
             for(int i = 0; i < estudiantes[estudiante].examen.length; i++){ //O(R)
@@ -83,31 +90,23 @@ public class Edr {
                 }
             }
         }
-
-        if(vecinoDerecho >= 0 && vecinoDerecho < estudiantes.length){ //O(1)
-            for(int i = 0; i < estudiantes[estudiante].examen.length; i++){ //O(R)
-                if (estudiantes[estudiante].examen[i] != estudiantes[vecinoDerecho].examen[i] && estudiantes[vecinoDerecho].examen[i] != -1){ //O(1)
-                    cantidadRespuestasDistintas[2]++; //O(1)
-                }
-            }
-        }
         
         int maxNoCoincidencias = -1; //O(1)
         int estudianteACopiar = -1; //O(1)
-        
-        if (cantidadRespuestasDistintas[0] > maxNoCoincidencias) { //O(1)
-            maxNoCoincidencias = cantidadRespuestasDistintas[0]; //O(1)
-            estudianteACopiar = vecinoFrente; //O(1)
+
+        if (cantidadRespuestasDistintas[2] > maxNoCoincidencias) { //O(1)
+            maxNoCoincidencias = cantidadRespuestasDistintas[2]; //O(1)
+            estudianteACopiar = vecinoDerecho; //O(1)
         }
 
         if (cantidadRespuestasDistintas[1] > maxNoCoincidencias) { //O(1)
             maxNoCoincidencias = cantidadRespuestasDistintas[1]; //O(1)
             estudianteACopiar = vecinoIzquierdo; //O(1)
         }
-
-        if (cantidadRespuestasDistintas[2] > maxNoCoincidencias) { //O(1)
-            maxNoCoincidencias = cantidadRespuestasDistintas[2]; //O(1)
-            estudianteACopiar = vecinoDerecho; //O(1)
+        
+        if (cantidadRespuestasDistintas[0] > maxNoCoincidencias) { //O(1)
+            maxNoCoincidencias = cantidadRespuestasDistintas[0]; //O(1)
+            estudianteACopiar = vecinoFrente; //O(1)
         }
 
         if (maxNoCoincidencias == 0){ //O(1)

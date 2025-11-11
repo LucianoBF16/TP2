@@ -1,5 +1,7 @@
 package aed;
 
+import java.util.Arrays;
+
 public class Estudiante implements Comparable<Estudiante>{
     int id;
     int referencia;
@@ -30,6 +32,6 @@ public class Estudiante implements Comparable<Estudiante>{
 
     @Override
     public String toString() {
-        return "id=" + id + "; " + "puntaje=" + puntaje;
+        return "id=" + id + "; " + "puntaje=" + puntaje + Arrays.toString(examen);
     }
 }
