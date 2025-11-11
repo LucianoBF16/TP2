@@ -37,7 +37,6 @@ class EdrTests {
         edr.resolver(0, 0, 0);
         notas = edr.notas();
         notas_esperadas = new double[]{10.0, 0.0, 0.0, 0.0};
-        System.out.println(edr.estudiante(3).toString());
         assertTrue(Arrays.equals(notas_esperadas, notas));
 
         edr.resolver(1, 0, 2);
@@ -376,6 +375,7 @@ class EdrTests {
         
         notas = edr.notas();
         notas_esperadas = new double[]{10.0, 30.0, 10.0, 10.0};
+        
         assertTrue(Arrays.equals(notas_esperadas, notas));
         
         edr.copiarse(2);
@@ -403,6 +403,9 @@ class EdrTests {
         
         notas = edr.notas();
         notas_esperadas = new double[]{10.0, 30.0, 40.0, 20.0};
+        for (int i=0; i < 4; i++){
+            System.out.println(edr.estudiante(i).toString());
+        }
         assertTrue(Arrays.equals(notas_esperadas, notas));
         
         edr.copiarse(3);

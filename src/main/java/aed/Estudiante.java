@@ -12,6 +12,9 @@ public class Estudiante implements Comparable<Estudiante>{
     Estudiante(int id, int longitudExamen){
         this.id = id;
         this.examen = new int[longitudExamen];
+        for(int i = 0; i < longitudExamen; i++){
+            this.examen[i] = -1;
+        }
         this.puntaje = 0;
         this.entrego = false;
         this.sospechoso = false;
