@@ -37,6 +37,7 @@ class EdrTests {
         edr.resolver(0, 0, 0);
         notas = edr.notas();
         notas_esperadas = new double[]{10.0, 0.0, 0.0, 0.0};
+        System.out.println(edr.estudiante(3).toString());
         assertTrue(Arrays.equals(notas_esperadas, notas));
 
         edr.resolver(1, 0, 2);

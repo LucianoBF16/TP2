@@ -19,7 +19,7 @@ public class heapTest {
         estudiantes = new Estudiante[cantidadEstudiantes];
     
         for (int i = 0; i < cantidadEstudiantes; i++){
-            estudiantes[i] = new Estudiante(i);
+            estudiantes[i] = new Estudiante(i,0);
         }
         
         arrhandles = minHeap.arrayToHeap(estudiantes);
@@ -98,13 +98,18 @@ public class heapTest {
         nuevoHeap.desencolar();
         assertEquals("[id=2; puntaje=2, id=1; puntaje=3, id=4; puntaje=5]", nuevoHeap.toString());
 
-        Estudiante nuevoEstudiante = new Estudiante(3);
-        Estudiante nuevoEstudiante1 = new Estudiante(0);
+        Estudiante nuevoEstudiante = new Estudiante(3,0);
+        Estudiante nuevoEstudiante1 = new Estudiante(0,0);
         nuevoEstudiante1.puntaje = 4;
         nuevoHeap.encolar(nuevoEstudiante);
         nuevoHeap.encolar(nuevoEstudiante1);
 
         assertEquals("[id=3; puntaje=0, id=2; puntaje=2, id=4; puntaje=5, id=1; puntaje=3, id=0; puntaje=4]", nuevoHeap.toString());
+    } 
+
+    @Test
+    void iniciarHeapEncolandoElemento() {
+        
     } 
 
     @Test

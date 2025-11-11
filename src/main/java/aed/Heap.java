@@ -9,20 +9,14 @@ public class Heap<T extends Comparable<T>>{
 
 
     public class Handle{
-        private int id;
         private int posicion;
 
-        Handle(int posicion, int id){ //O(1)
+        Handle(int posicion){ //O(1)
             this.posicion = posicion; //O(1)
-            this.id = id; //O(1)
         }
 
         public int posicion(){//O(1)
             return posicion; //O(1)
-        }
-
-        public int id(){ //O(1)
-            return id; //O(1)
         }
 
         public void actualizarNodo(T estudianteActualizado){
@@ -56,7 +50,7 @@ public class Heap<T extends Comparable<T>>{
         capacidad = longitudArray;
 
         for (int i = 0; i < longitudArray; i++){ //O(n)
-            arrayHandles[i] = new Handle(i, i); // O(1)
+            arrayHandles[i] = new Handle(i); // O(1)
         }
         /*  
             Complejidad total de este ciclo: O(n)
@@ -95,13 +89,15 @@ public class Heap<T extends Comparable<T>>{
         int hijoIzq = (2 * padre) + 1; // O(1) 
         int hijoDer = (2 * padre) + 2; // O(1)
 
-        if (hijoIzq < capacidad && arrayHeap[hijoIzq].compareTo(arrayHeap[menor]) < 0){ // hijoIzq < padreActual, O(1) 
-            menor = hijoIzq; // O(1)
+        if (hijoIzq < capacidad && arrayHeap[hijoIzq] != null && 
+            arrayHeap[hijoIzq].compareTo(arrayHeap[menor]) < 0) {
+            menor = hijoIzq;
         }
 
-        if (hijoDer < capacidad && arrayHeap[hijoDer].compareTo(arrayHeap[menor]) < 0) { // hijoDer < padreActual, O(1)
-            menor = hijoDer; // O(1)
-        } 
+        if (hijoDer < capacidad && arrayHeap[hijoDer] != null && 
+            arrayHeap[hijoDer].compareTo(arrayHeap[menor]) < 0) {
+            menor = hijoDer;
+        }
 
         if (padre != menor){ // O(1)
             intercambiar(padre, menor);
@@ -142,21 +138,51 @@ public class Heap<T extends Comparable<T>>{
 
     public void eliminar(int pos){
         int posicionFinal = capacidad - 1; // O(1)
+
+        if (pos == posicionFinal) {
+            arrayHeap[pos] = null;
+            arrayHandles[pos] = null; 
+            capacidad--;
+            return;
+        }
+
+        arrayHeap[pos] = arrayHeap[posicionFinal];
+        arrayHeap[posicionFinal] = null;
+
+        arrayHandles[pos] = arrayHandles[posicionFinal];
+        arrayHandles[pos].posicion = pos;
+        arrayHandles[posicionFinal] = null;
+
+        /* 
         arrayHeap[pos] = arrayHeap[posicionFinal]; // O(1)
         arrayHeap[posicionFinal] = null; // O(1)
-        heapify(pos);
-        capacidad --;
+
+        Handle temporalHandle = arrayHandles[pos]; // O(1)
+        arrayHandles[pos] = arrayHandles[posicionFinal]; // O(1)
+        arrayHandles[posicionFinal] = temporalHandle; // O(1)
+        
+        arrayHandles[pos].posicion = pos; // O(1)
+        arrayHandles[posicionFinal].posicion = posicionFinal; // O(1)
+        */
+
+        heapify(pos); //O(log n)
+        capacidad --; //O(1)
     }
 
     public void desencolar(){ //O(log(n))
         if (capacidad == 0){//O(1)
-            return;
+            return; //O(1)
         }
         
         int posicionFinal = capacidad - 1; //O(1)
         int raiz = 0; //O(1)
+
+        arrayHandles[raiz] = arrayHandles[posicionFinal]; //O(1)
+        arrayHandles[raiz].posicion = raiz; //O(1)
+        arrayHandles[posicionFinal] = null; //O(1)
+
         arrayHeap[raiz] = arrayHeap[posicionFinal]; // O(1)
-        arrayHeap[posicionFinal] = null; // O(1)
+        arrayHeap[posicionFinal] = null;
         capacidad --; //O(1)
         bajarNodo(raiz); //O(log(n))
     }
@@ -165,9 +191,10 @@ public class Heap<T extends Comparable<T>>{
         if (capacidad == arrayHeap.length){ //O(1)
             return;
         }
-    
+
         int posicionVaciaFinal = capacidad; //O(1)
-        arrayHeap[posicionVaciaFinal] = valor; //O(1)
+        arrayHeap[posicionVaciaFinal] = valor;
+        arrayHandles[posicionVaciaFinal] = new Handle(posicionVaciaFinal);
         capacidad ++; //O(1)
         subirNodo(posicionVaciaFinal); //O(log(n))
     }
