@@ -202,9 +202,15 @@ class EdrTests {
             edr.resolver(2, pregunta, 2);
             edr.resolver(3, pregunta, 3);
         }
+
+        for (int i=0; i < 4; i++){
+            System.out.println(edr.estudiante(i).toString());
+        }
+
         for(int alumno = 0; alumno < 4; alumno++){
             edr.entregar(alumno);
         }
+        
         notas = edr.notas();
         notas_esperadas = new double[]{10.0, 10.0, 10.0, 10.0};
         assertTrue(Arrays.equals(notas_esperadas, notas));
@@ -399,22 +405,22 @@ class EdrTests {
         edr.resolver(0, 4, 0);
         edr.resolver(1, 5, 1);
 
-        for (int i=0; i < 4; i++){
-            System.out.println(edr.estudiante(i).toString());
-        }
-
         edr.copiarse(2);
-
-        
-        for (int i=0; i < 4; i++){
-            System.out.println(edr.estudiante(i).toString());
-        }
 
         notas = edr.notas();
         notas_esperadas = new double[]{10.0, 30.0, 40.0, 20.0};
         assertTrue(Arrays.equals(notas_esperadas, notas));
+
+        for (int i=0; i < 4; i++){
+            System.out.println(edr.estudiante(i).toString());
+        }
+        System.out.println("-----------");
         
         edr.copiarse(3);
+
+        for (int i=0; i < 4; i++){
+            System.out.println(edr.estudiante(i).toString());
+        }
         
         notas = edr.notas();
         notas_esperadas = new double[]{10.0, 30.0, 40.0, 30.0};

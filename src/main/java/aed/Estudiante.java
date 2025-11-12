@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class Estudiante implements Comparable<Estudiante>{
     int id;
-    int referencia;
+    Heap.Handle referencia;
     int puntaje;
     int[] examen;
 
@@ -20,6 +20,7 @@ public class Estudiante implements Comparable<Estudiante>{
         this.puntaje = 0;
         this.entrego = false;
         this.sospechoso = false;
+        referencia = null;
     }
 
     public int compareTo(Estudiante otro) {
@@ -32,6 +33,6 @@ public class Estudiante implements Comparable<Estudiante>{
 
     @Override
     public String toString() {
-        return "id=" + id + "; " + "puntaje=" + puntaje + Arrays.toString(examen);
+        return "id=" + id + "; " + "puntaje=" + puntaje + Arrays.toString(examen) + "handlePos =" + referencia.toString();
     }
 }

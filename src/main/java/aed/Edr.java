@@ -34,6 +34,12 @@ public class Edr {
         Heap.Handle[] listaHandlesEstudiantes = estudiantesPorNota.arrayToHeap(nuevoArrEstudiantes); //O(E)
         handlesEstudiantesHeap = listaHandlesEstudiantes; //O(1)
 
+        //Unificamos handle con estudiantes
+
+        for(int i = 0; i < Cant_estudiantes; i++){ //O(E)
+            estudiantes[i].referencia = handlesEstudiantesHeap[i]; 
+        }   
+
         //Asignamos examen canonico a nuestras variables.
         
         solucionExamen = ExamenCanonico; //O(1)
@@ -61,36 +67,34 @@ public class Edr {
 
 
     public void copiarse(int estudiante) {
-        int cantidadAlumnosPorFila = dimensionAula - (dimensionAula / 2);
+        int cantidadAlumnosPorFila = dimensionAula;
         int vecinoIzquierdo = (estudiante % cantidadAlumnosPorFila == 0) ? -1 : estudiante - 1;
         int vecinoDerecho = (((estudiante + 1) % cantidadAlumnosPorFila == 0)) ? -1 : estudiante + 1;
         int vecinoFrente = estudiante - cantidadAlumnosPorFila;
 
         int[] cantidadRespuestasDistintas = new int[3]; //O(1)
-        if(vecinoDerecho >= 0 && vecinoDerecho < estudiantes.length){ //O(1)
-            for(int i = 0; i < estudiantes[estudiante].examen.length; i++){ //O(R)
+
+        for(int i = 0; i < estudiantes[estudiante].examen.length; i++){ //O(R)
+        
+            if(vecinoDerecho >= 0 && vecinoDerecho < estudiantes.length){ //O(1)
                 if (estudiantes[estudiante].examen[i] != estudiantes[vecinoDerecho].examen[i] && estudiantes[vecinoDerecho].examen[i] != -1){ //O(1)
                     cantidadRespuestasDistintas[2]++; //O(1)
                 }
             }
-        }
 
-        if(vecinoFrente >= 0){ //O(1)
-            for(int i = 0; i < estudiantes[estudiante].examen.length; i++){ //O(R)
+            if(vecinoIzquierdo >= 0){ //O(1) 
+                if (estudiantes[estudiante].examen[i] != estudiantes[vecinoIzquierdo].examen[i] && estudiantes[vecinoIzquierdo].examen[i] != -1){ //O(1)
+                    cantidadRespuestasDistintas[1]++; //O(1)
+                }
+            }
+
+            if(vecinoFrente >= 0){ //O(1)
                 if (estudiantes[estudiante].examen[i] != estudiantes[vecinoFrente].examen[i] && estudiantes[vecinoFrente].examen[i] != -1){ //O(1)
                     cantidadRespuestasDistintas[0]++; //O(1)
                 }
             }
         }
-           
-        if(vecinoIzquierdo >= 0){ //O(1) 
-            for(int i = 0; i < estudiantes[estudiante].examen.length; i++){ //O(R)
-                if (estudiantes[estudiante].examen[i] != estudiantes[vecinoIzquierdo].examen[i] && estudiantes[vecinoIzquierdo].examen[i] != -1){ //O(1)
-                    cantidadRespuestasDistintas[1]++; //O(1)
-                }
-            }
-        }
-        
+
         int maxNoCoincidencias = -1; //O(1)
         int estudianteACopiar = -1; //O(1)
 
@@ -107,7 +111,7 @@ public class Edr {
         if (cantidadRespuestasDistintas[0] > maxNoCoincidencias) { //O(1)
             maxNoCoincidencias = cantidadRespuestasDistintas[0]; //O(1)
             estudianteACopiar = vecinoFrente; //O(1)
-        }
+        } 
 
         if (maxNoCoincidencias == 0){ //O(1)
             return; //O(1)
@@ -139,13 +143,14 @@ public class Edr {
     public void resolver(int estudiante, int NroEjercicio, int res) { //Esperado: O(log(E))
         // Actualizamos el examen en estudiantes con la respuesta dada.
         estudiantes[estudiante].examen[NroEjercicio] = res; //O(1)
+
         // Actualizar puntaje estudiante
         if (solucionExamen[NroEjercicio] == res){
             estudiantes[estudiante].puntaje ++; //O(1)
-
-            //Actualizar el heap
-            handlesEstudiantesHeap[estudiante].actualizarNodo(estudiantes[estudiante]);
         }
+
+        //Actualizar el heap
+        handlesEstudiantesHeap[estudiante].actualizarNodo(estudiantes[estudiante]);
             
     }
 
@@ -160,7 +165,8 @@ public class Edr {
 //-------------------------------------------------ENTREGAR-------------------------------------------------------------
 
     public void entregar(int estudiante) {
-        throw new UnsupportedOperationException("Sin implementar");
+        estudiantes[estudiante].entrego = true;
+        handlesEstudiantesHeap[estudiante].eliminarNodo();
     }
 
 //-----------------------------------------------------CORREGIR---------------------------------------------------------

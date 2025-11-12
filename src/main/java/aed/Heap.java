@@ -23,6 +23,15 @@ public class Heap<T extends Comparable<T>>{
             eliminar(this.posicion); //O(log n)
             encolar(estudianteActualizado); // O(log n)
         }
+
+        public void eliminarNodo(){
+            eliminar(this.posicion); //O(log n)
+        }
+
+        @Override
+        public String toString() {
+            return "posicion" + posicion; 
+        }
     }
 
     public Heap(int n){ // O(n)
@@ -141,7 +150,7 @@ public class Heap<T extends Comparable<T>>{
 
         if (pos == posicionFinal) {
             arrayHeap[pos] = null;
-            arrayHandles[pos] = null; 
+            arrayHandles[pos] = null; // ERROR
             capacidad--;
             return;
         }
