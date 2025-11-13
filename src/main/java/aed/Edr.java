@@ -1,5 +1,6 @@
 package aed;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Edr {
     private Estudiante[] estudiantes;
@@ -150,7 +151,7 @@ public class Edr {
         }
 
         //Actualizar el heap
-        handlesEstudiantesHeap[estudiante].actualizarNodo(estudiantes[estudiante]);
+        estudiantes[estudiante].referencia.actualizarNodo(estudiantes[estudiante]);
             
     }
 
@@ -159,25 +160,135 @@ public class Edr {
 //------------------------------------------------CONSULTAR DARK WEB-------------------------------------------------------
 
     public void consultarDarkWeb(int n, int[] examenDW) {
-        throw new UnsupportedOperationException("Sin implementar");
+        int puntajeExamenDw = 0;
+        for(int j = 0; j < examenDW.length; j++){
+            if(examenDW[j] == solucionExamen[j]){
+                puntajeExamenDw++;
+            }
+        }
+
+        // Crear una lista temporal para los n estudiantes con menores puntajes
+        Estudiante[] estudiantesMenores = new Estudiante[n];
+        for(int i = 0; i < n; i++){
+            estudiantesMenores[i] = estudiantesPorNota.desencolar();
+        }
+
+        // Actualizar los n estudiantes
+        for(int i = 0; i < n; i++){
+            Estudiante est = estudiantesMenores[i];
+            est.examen = examenDW.clone();
+            est.puntaje = puntajeExamenDw;
+            // Volver a encolar en el heap
+            est.referencia = estudiantesPorNota.encolar(est);
+        }
     }
 
 //-------------------------------------------------ENTREGAR-------------------------------------------------------------
 
     public void entregar(int estudiante) {
         estudiantes[estudiante].entrego = true;
-        handlesEstudiantesHeap[estudiante].eliminarNodo();
+        estudiantes[estudiante].referencia.eliminarNodo();
     }
 
 //-----------------------------------------------------CORREGIR---------------------------------------------------------
 
     public NotaFinal[] corregir() {
-        throw new UnsupportedOperationException("Sin implementar");
+
+        int estudiantesNoCopiados = 0;
+
+        for(int i = 0; i<estudiantes.length;i++){
+            if (estudiantes[i].sospechoso == false){
+                estudiantesNoCopiados ++;
+            }
+        }
+
+        Heap<NotaFinal> heapNotaFinal = new Heap<>(estudiantesNoCopiados);
+        NotaFinal[] estudiantesOrdenados = new NotaFinal[estudiantesNoCopiados];
+
+        double[] notaPorEstudiante = notas();
+
+        for(int i = 0; i< estudiantes.length;i++){
+            if (estudiantes[i].sospechoso == false){
+                NotaFinal estudianteFinal = new NotaFinal(notaPorEstudiante[i], i);
+                heapNotaFinal.encolar(estudianteFinal);
+            }
+        }
+
+        for(int i = 0; i < estudiantesNoCopiados;i++){
+            NotaFinal maximo = heapNotaFinal.raiz();
+            heapNotaFinal.desencolar();
+            estudiantesOrdenados[i] = maximo;
+        }
+
+
+        return estudiantesOrdenados;
     }
 
 //-------------------------------------------------------CHEQUEAR COPIAS-------------------------------------------------
 
     public int[] chequearCopias() {
-        throw new UnsupportedOperationException("Sin implementar");
+        int[] estudiantesCopiados; // O(E)
+        int[][] cuentaEjercicios = new int[solucionExamen.length][10]; //O(R*10)
+        //Examen 4 ejercicios con respuestas multiple choice del 0 al 4
+        // int[[4,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
+
+        
+        //Sumamos todas las repuestas de los estudiantes
+        for(int est = 0; est < estudiantes.length; est++){ // O(E)
+            for(int ej = 0; ej < solucionExamen.length; ej++){ //O(R)
+                int respuesta = estudiantes[est].examen[ej]; // O(1)
+                if(estudiantes[est].examen[ej] != -1){ //O(1)
+                    cuentaEjercicios[ej][respuesta] ++; //O(1)
+                }
+            }
+        }
+        //Complejidad total del for O(E*R)
+
+        //Pasamos por cada estudiante y verificamos si se copiaron o no
+
+        for(int est = 0; est < estudiantes.length; est++){ // O(E)
+            boolean estudianteSeCopio = true;
+            int respondidas=0;
+            int ej = 0;
+             // O(1)
+            while(ej < solucionExamen.length ){
+                int respuesta= estudiantes[est].examen[ej];
+                if(estudiantes[est].examen[ej] != -1){
+                    respondidas ++;
+                    if ((cuentaEjercicios[ej][respuesta] - 1) < (estudiantes.length - 1) * 0.25){
+                        estudianteSeCopio = false;
+                        break;
+                    }
+                }
+
+                ej++;
+            }
+
+            if (respondidas==0){
+                estudianteSeCopio = false;
+            }
+
+            estudiantes[est].sospechoso = estudianteSeCopio;
+        }
+
+        int cantidadEstudiantesCopiados = 0; 
+
+        for(int est = 0; est < estudiantes.length; est++){ // O(E)
+            if(estudiantes[est].sospechoso == true){
+                cantidadEstudiantesCopiados ++;
+            }
+        }
+
+        estudiantesCopiados = new int[cantidadEstudiantesCopiados];
+
+        int j = 0; 
+        for(int est = 0; est < estudiantes.length; est++){ // O(E)
+            if(estudiantes[est].sospechoso == true){
+                estudiantesCopiados[j] = estudiantes[est].id;
+                j ++;
+            }
+        }
+
+        return estudiantesCopiados;
     }
 }

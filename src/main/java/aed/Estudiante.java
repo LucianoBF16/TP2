@@ -23,6 +23,10 @@ public class Estudiante implements Comparable<Estudiante>{
         referencia = null;
     }
 
+    public int obtenerId(){
+        return this.id;
+    }
+
     public int compareTo(Estudiante otro) {
         int comparar = Integer.compare(this.puntaje, otro.puntaje);
         if (comparar != 0) {

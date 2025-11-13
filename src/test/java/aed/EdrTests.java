@@ -203,14 +203,11 @@ class EdrTests {
             edr.resolver(3, pregunta, 3);
         }
 
-        for (int i=0; i < 4; i++){
-            System.out.println(edr.estudiante(i).toString());
-        }
 
         for(int alumno = 0; alumno < 4; alumno++){
             edr.entregar(alumno);
         }
-        
+
         notas = edr.notas();
         notas_esperadas = new double[]{10.0, 10.0, 10.0, 10.0};
         assertTrue(Arrays.equals(notas_esperadas, notas));
@@ -225,7 +222,16 @@ class EdrTests {
             new NotaFinal(10.0, 2),
             new NotaFinal(10.0, 1),
             new NotaFinal(10.0, 0)
-        };
+        };  
+
+        for (int i=0; i < 4; i++){
+            System.out.println(notas_finales[i].toString());
+        }
+
+        for (int i=0; i < 4; i++){
+            System.out.println(notas_finales_esperadas[i].toString());
+        }
+        
 
         assertTrue(Arrays.equals(notas_finales_esperadas, notas_finales));
 
@@ -296,7 +302,10 @@ class EdrTests {
         notas_esperadas = new double[]{0.0, 0.0, 0.0, 50.0, 40.0, 40.0, 0.0, 0.0, 0.0};
         assertTrue(Arrays.equals(notas_esperadas, notas));
 
+        
         int[] copiones = edr_9.chequearCopias();
+
+        
         int[] copiones_esperados = new int[]{0,1,2,4,5};
         assertTrue(Arrays.equals(copiones_esperados, copiones));
 
@@ -411,16 +420,7 @@ class EdrTests {
         notas_esperadas = new double[]{10.0, 30.0, 40.0, 20.0};
         assertTrue(Arrays.equals(notas_esperadas, notas));
 
-        for (int i=0; i < 4; i++){
-            System.out.println(edr.estudiante(i).toString());
-        }
-        System.out.println("-----------");
-        
         edr.copiarse(3);
-
-        for (int i=0; i < 4; i++){
-            System.out.println(edr.estudiante(i).toString());
-        }
         
         notas = edr.notas();
         notas_esperadas = new double[]{10.0, 30.0, 40.0, 30.0};
@@ -554,10 +554,22 @@ class EdrTests {
 
         assertTrue(Arrays.equals(notas, notas_esperadas));
 
+        for (int i=0; i < 8; i++){
+            System.out.println(edr_8.estudiante(i).toString());
+        }
+
+        System.out.println("------");
+
         edr_8.consultarDarkWeb(3, resolucion_1);
+
+        for (int i=0; i < 8; i++){
+            System.out.println(edr_8.estudiante(i).toString());
+        }
 
         notas = edr_8.notas();
         notas_esperadas = new double[]{80.0, 70.0, 60.0, 50.0, 40.0, 0.0, 0.0, 0.0};
+
+        
 
         assertTrue(Arrays.equals(notas, notas_esperadas));
 

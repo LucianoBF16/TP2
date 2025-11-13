@@ -20,8 +20,7 @@ public class Heap<T extends Comparable<T>>{
         }
 
         public void actualizarNodo(T estudianteActualizado){
-            eliminar(this.posicion); //O(log n)
-            encolar(estudianteActualizado); // O(log n)
+            actualizarValor(this.posicion, estudianteActualizado); // log(n)
         }
 
         public void eliminarNodo(){
@@ -114,6 +113,10 @@ public class Heap<T extends Comparable<T>>{
         }
     }
 
+    public void actualizarValor(int posicion,T Estudiante){
+        arrayHeap[posicion] = Estudiante; 
+        heapify(posicion);
+    }
 
     public void subirNodo(int hijo){ //O(log(n))
         if (hijo == 0){
@@ -150,7 +153,7 @@ public class Heap<T extends Comparable<T>>{
 
         if (pos == posicionFinal) {
             arrayHeap[pos] = null;
-            arrayHandles[pos] = null; // ERROR
+            arrayHandles[pos] = null;
             capacidad--;
             return;
         }
@@ -166,10 +169,12 @@ public class Heap<T extends Comparable<T>>{
         capacidad --; //O(1)
     }
 
-    public void desencolar(){ //O(log(n))
+    public T desencolar(){ //O(log(n))
         if (capacidad == 0){//O(1)
-            return; //O(1)
+            return null; //O(1)
         }
+
+        T raizOriginal = arrayHeap[0];
         
         int posicionFinal = capacidad - 1; //O(1)
         int raiz = 0; //O(1)
@@ -182,18 +187,25 @@ public class Heap<T extends Comparable<T>>{
         arrayHeap[posicionFinal] = null;
         capacidad --; //O(1)
         bajarNodo(raiz); //O(log(n))
+
+        return raizOriginal;
     }
 
-    public void encolar(T valor){//O(log(n))
+    public Handle encolar(T valor){//O(log(n))
         if (capacidad == arrayHeap.length){ //O(1)
-            return;
+            return null;
         }
 
         int posicionVaciaFinal = capacidad; //O(1)
         arrayHeap[posicionVaciaFinal] = valor;
-        arrayHandles[posicionVaciaFinal] = new Handle(posicionVaciaFinal);
+
+        Handle nuevoHandle = new Handle(posicionVaciaFinal);
+        arrayHandles[posicionVaciaFinal] = nuevoHandle;
+
         capacidad ++; //O(1)
         subirNodo(posicionVaciaFinal); //O(log(n))
+
+        return nuevoHandle;
     }
 
     @Override
