@@ -20,7 +20,7 @@ public class Heap<T extends Comparable<T>>{
         }
 
         public void actualizarNodo(T estudianteActualizado){
-            actualizarValor(this.posicion, estudianteActualizado); // log(n)
+            actualizarValor(this.posicion, estudianteActualizado); // O(log n)
         }
 
         public void eliminarNodo(){
@@ -29,7 +29,7 @@ public class Heap<T extends Comparable<T>>{
 
         @Override
         public String toString() {
-            return "posicion" + posicion; 
+            return "posicion" + posicion; //O(1)
         }
     }
 
@@ -51,7 +51,7 @@ public class Heap<T extends Comparable<T>>{
         -Luego devuelve una lista de handles, la cual se va modificando a medida que se intercambia posiciones.
     */
 
-    public Handle[] arrayToHeap(T[] arrayComparable) { 
+    public Handle[] arrayToHeap(T[] arrayComparable) {//esperado: O(n) 
         arrayHeap = arrayComparable; // O(1)
         int longitudArray = arrayHeap.length; // O(1)
         int ultimoPadre = (longitudArray / 2) - 1; // O(1)
@@ -60,10 +60,7 @@ public class Heap<T extends Comparable<T>>{
         for (int i = 0; i < longitudArray; i++){ //O(n)
             arrayHandles[i] = new Handle(i); // O(1)
         }
-        /*  
-            Complejidad total de este ciclo: O(n)
-        */
-
+        
         for (int padre = ultimoPadre; padre >= 0; padre--) { // O((n/2)-1)
             bajarNodo(padre); // O(log n)
         }
@@ -73,13 +70,11 @@ public class Heap<T extends Comparable<T>>{
         */
         
         return arrayHandles; //O(1)
-    }
-    /*  
-        Complejidad total de la funcion: O(n)
-    */
+    } 
+    //Complejidad total: O(1) + O(n)
 
 
-    public void intercambiar(int padre, int hijo){
+    public void intercambiar(int padre, int hijo){ //O(1)
         T temporal = arrayHeap[padre]; // O(1)
         arrayHeap[padre] = arrayHeap[hijo]; // O(1)
         arrayHeap[hijo]= temporal; // O(1)
@@ -92,89 +87,91 @@ public class Heap<T extends Comparable<T>>{
         arrayHandles[hijo].posicion = hijo; // O(1)
     }
 
-    public void bajarNodo(int padre){ //O(log(n))
+    public void bajarNodo(int padre){ //O(log n)
         int menor = padre; // O(1)
         int hijoIzq = (2 * padre) + 1; // O(1) 
         int hijoDer = (2 * padre) + 2; // O(1)
 
-        if (hijoIzq < capacidad && arrayHeap[hijoIzq] != null && 
-            arrayHeap[hijoIzq].compareTo(arrayHeap[menor]) < 0) {
-            menor = hijoIzq;
+        if (hijoIzq < capacidad && arrayHeap[hijoIzq] != null && //O(1)
+            arrayHeap[hijoIzq].compareTo(arrayHeap[menor]) < 0) { //O(1)
+            menor = hijoIzq; //O(1)
         }
 
-        if (hijoDer < capacidad && arrayHeap[hijoDer] != null && 
-            arrayHeap[hijoDer].compareTo(arrayHeap[menor]) < 0) {
-            menor = hijoDer;
+        if (hijoDer < capacidad && arrayHeap[hijoDer] != null && //O(1)
+            arrayHeap[hijoDer].compareTo(arrayHeap[menor]) < 0) { //O(1)
+            menor = hijoDer; //O(1)
         }
 
         if (padre != menor){ // O(1)
-            intercambiar(padre, menor);
+            intercambiar(padre, menor); //O(1)
             bajarNodo(menor); // O(log(n))
         }
     }
 
-    public void actualizarValor(int posicion,T Estudiante){
-        arrayHeap[posicion] = Estudiante; 
-        heapify(posicion);
+    public void actualizarValor(int posicion,T Estudiante){ //esperado: O(log n)
+        arrayHeap[posicion] = Estudiante; //O(1)
+        heapify(posicion); //O(log n)
     }
 
     public void subirNodo(int hijo){ //O(log(n))
-        if (hijo == 0){
-            return;
+        if (hijo == 0){ //O(1)
+            return; //O(1)
         }
         int padre = (hijo-1)/2; //O(1)
-        if (arrayHeap[hijo].compareTo(arrayHeap[padre]) < 0) { // hijo < padre, O(1)
+        if (arrayHeap[hijo].compareTo(arrayHeap[padre]) < 0) { //O(1)
             intercambiar(padre, hijo);
             subirNodo(padre); // O(log(n))
         } 
     }   
     
-    public void heapify(int hijo){
-        if (hijo < 0 || hijo >= capacidad) {
-            return;
+    public void heapify(int hijo){//esperado: O(log n)
+        if (hijo < 0 || hijo >= capacidad) { //O(1)
+            return; //O(1)
         }
 
-        if (hijo == 0) {
-            bajarNodo(hijo);
-            return;
+        if (hijo == 0) { //O(1)
+            bajarNodo(hijo); //O(log n)
+            return; //O(1)
         }
         
         int padre = (hijo-1)/2; //O(1) 
-        if (arrayHeap[hijo].compareTo(arrayHeap[padre]) < 0){
-            subirNodo(hijo);
+        if (arrayHeap[hijo].compareTo(arrayHeap[padre]) < 0){ //O(1)
+            subirNodo(hijo); //O(log n)
         }
         else{
-            bajarNodo(hijo);
+            bajarNodo(hijo); //O(log n)
         }
     }
+    //Complejidad total: O(1) + O(log n) + O(log n)
 
-    public void eliminar(int pos){
+    public void eliminar(int pos){//esperado: O(log n)
         int posicionFinal = capacidad - 1; // O(1)
 
-        if (pos == posicionFinal) {
-            arrayHeap[pos] = null;
-            arrayHandles[pos] = null;
-            capacidad--;
-            return;
+        if (pos == posicionFinal) { //O(1)
+            arrayHeap[pos] = null; //O(1)
+            arrayHandles[pos] = null; //O(1)
+            capacidad--; //O(1)
+            return; //O(1)
         }
 
-        arrayHeap[pos] = arrayHeap[posicionFinal];
-        arrayHeap[posicionFinal] = null;
+        arrayHeap[pos] = arrayHeap[posicionFinal]; //O(1)
+        arrayHeap[posicionFinal] = null; //O(1)
 
-        arrayHandles[pos] = arrayHandles[posicionFinal];
-        arrayHandles[pos].posicion = pos;
-        arrayHandles[posicionFinal] = null;
+        arrayHandles[pos] = arrayHandles[posicionFinal]; //O(1)
+        arrayHandles[pos].posicion = pos; //O(1) 
+        arrayHandles[posicionFinal] = null; //O(1)
 
         heapify(pos); //O(log n)
         capacidad --; //O(1)
     }
+    //Complejidad total: O(1) + O(log n) = O(log n)
 
-    public T desencolar(){ //O(log(n))
+    public T desencolar(){ //esperado: O(log n)
         if (capacidad == 0){//O(1)
             return null; //O(1)
         }
 
-        T raizOriginal = arrayHeap[0];
+        T raizOriginal = arrayHeap[0]; //O(1)
         
         int posicionFinal = capacidad - 1; //O(1)
         int raiz = 0; //O(1)
@@ -184,37 +181,41 @@ public class Heap<T extends Comparable<T>>{
         arrayHandles[posicionFinal] = null; //O(1)
 
         arrayHeap[raiz] = arrayHeap[posicionFinal]; // O(1)
-        arrayHeap[posicionFinal] = null;
+        arrayHeap[posicionFinal] = null; //O(1)
         capacidad --; //O(1)
-        bajarNodo(raiz); //O(log(n))
+        bajarNodo(raiz); //O(log n)
 
-        return raizOriginal;
+        return raizOriginal; //O(1)
     }
+    //Complejidad total: 0(1) + O(log n) = O(log n)
 
-    public Handle encolar(T valor){//O(log(n))
+    public Handle encolar(T valor){//esperado: O(log n)
         if (capacidad == arrayHeap.length){ //O(1)
-            return null;
+            return null; //O(1)
         }
 
         int posicionVaciaFinal = capacidad; //O(1)
-        arrayHeap[posicionVaciaFinal] = valor;
+        arrayHeap[posicionVaciaFinal] = valor; 
 
-        Handle nuevoHandle = new Handle(posicionVaciaFinal);
-        arrayHandles[posicionVaciaFinal] = nuevoHandle;
+        Handle nuevoHandle = new Handle(posicionVaciaFinal); //O(1)
+        arrayHandles[posicionVaciaFinal] = nuevoHandle; //O(1)
 
         capacidad ++; //O(1)
-        subirNodo(posicionVaciaFinal); //O(log(n))
+        subirNodo(posicionVaciaFinal); //O(log n)
 
-        return nuevoHandle;
+        return nuevoHandle; //O(1)
     }
+    //Complejidad total: O(1) + O(1) + O(1) + O(log n) = O(log n)
 
+
+    // toString para hacer test.
     @Override
-    public String toString() {//O(n)
+    public String toString() {//esperado: O(n)
 
         String texto = "["; //O(1)
 
-        for (int i = 0; i < capacidad; i++){//O(n)
-            if (i ==capacidad - 1){
+        for (int i = 0; i < capacidad; i++){ //O(n)
+            if (i ==capacidad - 1){ //O(1)
                 texto = texto + arrayHeap[i].toString(); //O(1)
             }else{
                 texto = texto + arrayHeap[i].toString() + ", "; //O(1)
