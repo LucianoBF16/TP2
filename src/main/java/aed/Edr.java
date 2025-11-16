@@ -10,8 +10,8 @@ public class Edr {
 
 
     //Para hacer toString:
-    public Estudiante estudiante(int id){
-        return estudiantes[id];
+    public Estudiante[] estudiante(){
+        return estudiantes;
     }
 
     /*
@@ -37,7 +37,7 @@ public class Edr {
         //Unificamos handle con estudiantes
 
         for(int i = 0; i < Cant_estudiantes; i++){ //O(E)
-            estudiantes[i].referencia = listaHandlesEstudiantes[i]; //O(1) 
+            estudiantes[i].cambiarReferencia(listaHandlesEstudiantes[i]); //O(1) 
         }   
 
         //Asignamos examen canonico a nuestras variables.
@@ -60,7 +60,7 @@ public class Edr {
 
         //Insertamos en notasEstudiantes por menor id la nota que tiene respectiva a su puntaje
         for (int i = 0; i < estudiantes.length; i++){ //O(E)
-            notasEstudiante[i] = valorEjercicio * estudiantes[i].puntaje; //O(1)
+            notasEstudiante[i] = valorEjercicio * estudiantes[i].obtenerPuntaje(); //O(1)
         }
 
         //Devolvemos las notas
@@ -75,7 +75,7 @@ public class Edr {
 
         //Inicializamos variables, segun el id del estudiante actual calculamos los posibles id de los estudiantes cercanos, siempre y cuando se pueda su valor 
         //sera >= 0 
-        int cantidadAlumnosPorFila = dimensionAula; //O(1)
+        int cantidadAlumnosPorFila = dimensionAula - (dimensionAula/2); //O(1)
         int vecinoIzquierdo = (estudiante % cantidadAlumnosPorFila == 0) ? -1 : estudiante - 1; //O(1)
         int vecinoDerecho = (((estudiante + 1) % cantidadAlumnosPorFila == 0)) ? -1 : estudiante + 1; //O(1)
         int vecinoFrente = estudiante - cantidadAlumnosPorFila; //O(1)
@@ -90,22 +90,22 @@ public class Edr {
 
         // Iteramos en el examen del estudiante comparando con los vecinos si existen y sumamos la cantidad de respuestas distintas de cada uno.
         
-        for(int i = 0; i < estudiantes[estudiante].examen.length; i++){ //O(R)
+        for(int i = 0; i < estudiantes[estudiante].obtenerExamen().length; i++){ //O(R)
         
             if(vecinoDerecho >= 0 && vecinoDerecho < estudiantes.length){ //O(1)
-                if (estudiantes[estudiante].examen[i] == -1 && estudiantes[vecinoDerecho].examen[i] != -1){ //O(1)
+                if (estudiantes[estudiante].obtenerExamen()[i] == -1 && estudiantes[vecinoDerecho].obtenerExamen()[i] != -1){ //O(1)
                     cantidadRespuestasDistintas[2]++; //O(1)
                 }
             }
 
             if(vecinoIzquierdo >= 0){ //O(1) 
-                if (estudiantes[estudiante].examen[i] == -1 && estudiantes[vecinoIzquierdo].examen[i] != -1){ //O(1)
+                if (estudiantes[estudiante].obtenerExamen()[i] == -1 && estudiantes[vecinoIzquierdo].obtenerExamen()[i] != -1){ //O(1)
                     cantidadRespuestasDistintas[1]++; //O(1)
                 }
             }
 
             if(vecinoFrente >= 0){ //O(1)
-                if (estudiantes[estudiante].examen[i] == -1 && estudiantes[vecinoFrente].examen[i] != -1){ //O(1)
+                if (estudiantes[estudiante].obtenerExamen()[i] == -1 && estudiantes[vecinoFrente].obtenerExamen()[i] != -1){ //O(1)
                     cantidadRespuestasDistintas[0]++; //O(1)
                 }
             }
@@ -141,14 +141,14 @@ public class Edr {
         
         boolean noSeCopio = true; //O(1)
         int i = 0; //O(1)
-        while(noSeCopio && i < estudiantes[estudiante].examen.length){ //O(R)
-            if(estudiantes[estudiante].examen[i] == -1 && estudiantes[estudianteACopiar].examen[i] != -1){ //O(1)
-                estudiantes[estudiante].examen[i] = estudiantes[estudianteACopiar].examen[i]; //O(1)
-                if (solucionExamen[i] == estudiantes[estudiante].examen[i]){ //O(1)
-                    estudiantes[estudiante].puntaje ++; //O(1)
+        while(noSeCopio && i < estudiantes[estudiante].obtenerExamen().length){ //O(R)
+            if(estudiantes[estudiante].obtenerExamen()[i] == -1 && estudiantes[estudianteACopiar].obtenerExamen()[i] != -1){ //O(1)
+                estudiantes[estudiante].cambiarPosicionExamen(i, estudiantes[estudianteACopiar].obtenerExamen()[i]); //O(1)
+                if (solucionExamen[i] == estudiantes[estudiante].obtenerExamen()[i]){ //O(1)
+                    estudiantes[estudiante].cambiarPuntaje(estudiantes[estudiante].obtenerPuntaje() + 1) ; //O(1)
 
                     //Actualizar el heap
-                    estudiantes[estudiante].referencia.actualizarNodo(estudiantes[estudiante]); //O(log E)
+                    estudiantes[estudiante].actualizarReferencia(estudiantes[estudiante]); //O(log E)
                 }
                 noSeCopio = false; //O(1)
             }
@@ -165,15 +165,15 @@ public class Edr {
 
     public void resolver(int estudiante, int NroEjercicio, int res) { //Esperado: O(log(E))
         // Actualizamos el examen en estudiantes con la respuesta dada.
-        estudiantes[estudiante].examen[NroEjercicio] = res; //O(1)
+        estudiantes[estudiante].cambiarPosicionExamen(NroEjercicio, res); //O(1)
 
         // Actualizar puntaje estudiante
         if (solucionExamen[NroEjercicio] == res){ //O(1)
-            estudiantes[estudiante].puntaje ++; //O(1)
+            estudiantes[estudiante].cambiarPuntaje(estudiantes[estudiante].obtenerPuntaje() + 1); //O(1)
         }
 
         //Actualizar el heap
-        estudiantes[estudiante].referencia.actualizarNodo(estudiantes[estudiante]); //O(log E)
+        estudiantes[estudiante].actualizarReferencia(estudiantes[estudiante]); //O(log E)
             
     }
 
@@ -200,9 +200,10 @@ public class Edr {
         // Actualizar los n estudiantes y los encola en el heap
         for(int i = 0; i < n; i++){ //O(n)
             Estudiante est = estudiantesMenores[i]; //O(1)
-            est.examen = examenDW.clone(); //O(R)
-            est.puntaje = puntajeExamenDw; //O(1)
-            est.referencia = estudiantesPorNota.encolar(est); //O(log E)
+            est.cambiarExamen(examenDW.clone()); //O(R)
+            est.cambiarPuntaje(puntajeExamenDw); //O(1)
+            Heap.Handle estudianteEncolado = estudiantesPorNota.encolar(est); //O(log E)
+            est.cambiarReferencia(estudianteEncolado); //O(1)
         }
     }
 
@@ -213,10 +214,10 @@ public class Edr {
     public void entregar(int estudiante) { //esperado: O(log E)
 
         //Cambiamos valores internos del estudiante
-        estudiantes[estudiante].entrego = true; //O(1)
+        estudiantes[estudiante].cambiarEntrego(true); //O(1)
 
         //Lo eliminamos del heap
-        estudiantes[estudiante].referencia.eliminarNodo(); //O(log E)
+        estudiantes[estudiante].eliminarNodoReferencia(); //O(log E)
         
     }
 
@@ -230,7 +231,7 @@ public class Edr {
         int estudiantesNoCopiados = 0; //O(1)
 
         for(int i = 0; i<estudiantes.length;i++){ //O(E)
-            if (estudiantes[i].sospechoso == false){ //O(1)
+            if (estudiantes[i].obtenerSospechoso() == false){ //O(1)
                 estudiantesNoCopiados ++; //O(1)
             } 
         }
@@ -245,7 +246,7 @@ public class Edr {
 
         // Creo para cada estudiante un NotaFinal y lo introduzco en el heap.
         for(int i = 0; i< estudiantes.length;i++){ //O(E)
-            if (estudiantes[i].sospechoso == false){ //O(1)
+            if (estudiantes[i].obtenerSospechoso() == false){ //O(1)
                 NotaFinal estudianteFinal = new NotaFinal(notaPorEstudiante[i], i); //O(1)
                 heapNotaFinal.encolar(estudianteFinal); //O(log E)
             }
@@ -280,8 +281,8 @@ public class Edr {
         //Sumamos todas las repuestas de los estudiantes
         for(int est = 0; est < estudiantes.length; est++){ // O(E)
             for(int ej = 0; ej < solucionExamen.length; ej++){ //O(R)
-                int respuesta = estudiantes[est].examen[ej]; // O(1)
-                if(estudiantes[est].examen[ej] != -1){ //O(1)
+                int respuesta = estudiantes[est].obtenerExamen()[ej]; // O(1)
+                if(estudiantes[est].obtenerExamen()[ej] != -1){ //O(1)
                     cuentaEjercicios[ej][respuesta] ++; //O(1)
                 }
             }
@@ -294,8 +295,8 @@ public class Edr {
             int ej = 0; //O(1)
             
             while(ej < solucionExamen.length ){ //O(R)
-                int respuesta= estudiantes[est].examen[ej]; //O(1)
-                if(estudiantes[est].examen[ej] != -1){ //O(1)
+                int respuesta= estudiantes[est].obtenerExamen()[ej]; //O(1)
+                if(estudiantes[est].obtenerExamen()[ej] != -1){ //O(1)
                     respondidas ++; //O(1)
                     if ((cuentaEjercicios[ej][respuesta] - 1) < (estudiantes.length - 1) * 0.25){ //O(1)
                         estudianteSeCopio = false; //O(1)
@@ -310,14 +311,14 @@ public class Edr {
                 estudianteSeCopio = false; //O(1)
             }
 
-            estudiantes[est].sospechoso = estudianteSeCopio; //O(1)
+            estudiantes[est].cambiarSospechoso(estudianteSeCopio); //O(1)
         }
 
         //Calculamos la cantidad de estudiantes que se copiaron
         int cantidadEstudiantesCopiados = 0; //O(1)
 
         for(int est = 0; est < estudiantes.length; est++){ // O(E)
-            if(estudiantes[est].sospechoso == true){ //O(1)
+            if(estudiantes[est].obtenerSospechoso() == true){ //O(1)
                 cantidadEstudiantesCopiados ++; //O(1)
             }
         }
@@ -329,8 +330,8 @@ public class Edr {
         //Si es sospechoso entonces lo metemos en el array
         int j = 0; //O(1)
         for(int est = 0; est < estudiantes.length; est++){ // O(E)
-            if(estudiantes[est].sospechoso == true){ //O(1)
-                estudiantesCopiados[j] = estudiantes[est].id; //O(1)
+            if(estudiantes[est].obtenerSospechoso() == true){ //O(1)
+                estudiantesCopiados[j] = estudiantes[est].obtenerId(); //O(1)
                 j ++; //O(1)
             }
         }

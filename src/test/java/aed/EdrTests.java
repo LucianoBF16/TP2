@@ -15,7 +15,7 @@ class EdrTests {
 
     @BeforeEach
     void setUp(){
-        d_aula = 5;
+        d_aula = 7;
         cant_alumnos = 4;
         solucion = new int[]{0,1,2,3,4,5,6,7,8,9};
 
@@ -202,12 +202,9 @@ class EdrTests {
             edr.resolver(2, pregunta, 2);
             edr.resolver(3, pregunta, 3);
         }
-
-
         for(int alumno = 0; alumno < 4; alumno++){
             edr.entregar(alumno);
         }
-
         notas = edr.notas();
         notas_esperadas = new double[]{10.0, 10.0, 10.0, 10.0};
         assertTrue(Arrays.equals(notas_esperadas, notas));
@@ -222,16 +219,7 @@ class EdrTests {
             new NotaFinal(10.0, 2),
             new NotaFinal(10.0, 1),
             new NotaFinal(10.0, 0)
-        };  
-
-        for (int i=0; i < 4; i++){
-            System.out.println(notas_finales[i].toString());
-        }
-
-        for (int i=0; i < 4; i++){
-            System.out.println(notas_finales_esperadas[i].toString());
-        }
-        
+        };
 
         assertTrue(Arrays.equals(notas_finales_esperadas, notas_finales));
 
@@ -302,10 +290,7 @@ class EdrTests {
         notas_esperadas = new double[]{0.0, 0.0, 0.0, 50.0, 40.0, 40.0, 0.0, 0.0, 0.0};
         assertTrue(Arrays.equals(notas_esperadas, notas));
 
-        
         int[] copiones = edr_9.chequearCopias();
-
-        
         int[] copiones_esperados = new int[]{0,1,2,4,5};
         assertTrue(Arrays.equals(copiones_esperados, copiones));
 
@@ -323,6 +308,7 @@ class EdrTests {
 
     @Test
     void alumnos_se_copian_una_vez(){
+        edr = new Edr(7, cant_alumnos, solucion);
         double[] notas;
         double[] notas_esperadas;
 
@@ -367,6 +353,7 @@ class EdrTests {
 
     @Test
     void alumnos_se_copian_mas_de_una_vez(){
+        edr = new Edr(7, cant_alumnos, solucion);
         double[] notas;
         double[] notas_esperadas;
 
@@ -394,7 +381,6 @@ class EdrTests {
         
         edr.copiarse(2);
         
-        
         notas = edr.notas();
         notas_esperadas = new double[]{10.0, 30.0, 20.0, 10.0};
         assertTrue(Arrays.equals(notas_esperadas, notas));
@@ -415,11 +401,11 @@ class EdrTests {
         edr.resolver(1, 5, 1);
 
         edr.copiarse(2);
-
+        
         notas = edr.notas();
         notas_esperadas = new double[]{10.0, 30.0, 40.0, 20.0};
         assertTrue(Arrays.equals(notas_esperadas, notas));
-
+        
         edr.copiarse(3);
         
         notas = edr.notas();
@@ -554,22 +540,10 @@ class EdrTests {
 
         assertTrue(Arrays.equals(notas, notas_esperadas));
 
-        for (int i=0; i < 8; i++){
-            System.out.println(edr_8.estudiante(i).toString());
-        }
-
-        System.out.println("------");
-
         edr_8.consultarDarkWeb(3, resolucion_1);
-
-        for (int i=0; i < 8; i++){
-            System.out.println(edr_8.estudiante(i).toString());
-        }
 
         notas = edr_8.notas();
         notas_esperadas = new double[]{80.0, 70.0, 60.0, 50.0, 40.0, 0.0, 0.0, 0.0};
-
-        
 
         assertTrue(Arrays.equals(notas, notas_esperadas));
 
@@ -653,3 +627,4 @@ class EdrTests {
         assertTrue(Arrays.equals(notas_finales_esperadas, notas_finales));
     }
 }
+

@@ -74,7 +74,7 @@ public class Heap<T extends Comparable<T>>{
     //Complejidad total: O(1) + O(n)
 
 
-    public void intercambiar(int padre, int hijo){ //O(1)
+    private void intercambiar(int padre, int hijo){ //O(1)
         T temporal = arrayHeap[padre]; // O(1)
         arrayHeap[padre] = arrayHeap[hijo]; // O(1)
         arrayHeap[hijo]= temporal; // O(1)
@@ -87,7 +87,7 @@ public class Heap<T extends Comparable<T>>{
         arrayHandles[hijo].posicion = hijo; // O(1)
     }
 
-    public void bajarNodo(int padre){ //O(log n)
+    private void bajarNodo(int padre){ //O(log n)
         int menor = padre; // O(1)
         int hijoIzq = (2 * padre) + 1; // O(1) 
         int hijoDer = (2 * padre) + 2; // O(1)
@@ -108,12 +108,12 @@ public class Heap<T extends Comparable<T>>{
         }
     }
 
-    public void actualizarValor(int posicion,T Estudiante){ //esperado: O(log n)
+    private void actualizarValor(int posicion,T Estudiante){ //esperado: O(log n)
         arrayHeap[posicion] = Estudiante; //O(1)
         heapify(posicion); //O(log n)
     }
 
-    public void subirNodo(int hijo){ //O(log(n))
+    private void subirNodo(int hijo){ //O(log(n))
         if (hijo == 0){ //O(1)
             return; //O(1)
         }
@@ -124,7 +124,7 @@ public class Heap<T extends Comparable<T>>{
         } 
     }   
     
-    public void heapify(int hijo){//esperado: O(log n)
+    private void heapify(int hijo){//esperado: O(log n)
         if (hijo < 0 || hijo >= capacidad) { //O(1)
             return; //O(1)
         }
@@ -144,7 +144,7 @@ public class Heap<T extends Comparable<T>>{
     }
     //Complejidad total: O(1) + O(log n) + O(log n)
 
-    public void eliminar(int pos){//esperado: O(log n)
+    private void eliminar(int pos){//esperado: O(log n)
         int posicionFinal = capacidad - 1; // O(1)
 
         if (pos == posicionFinal) { //O(1)

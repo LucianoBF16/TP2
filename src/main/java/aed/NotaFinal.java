@@ -21,14 +21,10 @@ public class NotaFinal implements Comparable<NotaFinal> {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (!(obj instanceof NotaFinal)) return false;
+        if (obj == null) return false;
+        if (obj.getClass() != NotaFinal.class) return false;
         NotaFinal otra = (NotaFinal) obj;
-        return Double.compare(_nota, otra._nota) == 0 && _id == otra._id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(_nota, _id);
+        return Double.compare(this._nota, otra._nota) == 0 && this._id == otra._id;
     }
 
 }
