@@ -23,15 +23,15 @@ public class Edr {
         int longitudExamen = ExamenCanonico.length; //O(1)
         
         //Inicializamos arreglo Estudiantes
-        this.estudiantes = new Estudiante[Cant_estudiantes];
+        this.estudiantes = new Estudiante[Cant_estudiantes]; // O(E)
         for(int i = 0; i < Cant_estudiantes; i++){ //O(E)
             Estudiante nuevoEstudiante = new Estudiante(i, longitudExamen); //O(R)
             estudiantes[i] = nuevoEstudiante; //O(1)
         }   
 
         //Inicializamos el heap de estudiantes ordenado por entregaron, puntaje y por id.
-        Estudiante[] nuevoArrEstudiantes = estudiantes.clone();
-        estudiantesPorNota = new Heap<Estudiante>(Cant_estudiantes); //O(E)
+        Estudiante[] nuevoArrEstudiantes = estudiantes.clone(); //O(E)
+        estudiantesPorNota = new Heap<Estudiante>(Cant_estudiantes); //O(E)     
         Heap.Handle[] listaHandlesEstudiantes = estudiantesPorNota.arrayToHeap(nuevoArrEstudiantes); //O(E)
 
         //Unificamos handle con estudiantes
@@ -56,7 +56,7 @@ public class Edr {
     public double[] notas(){//esperado: O(E)
         //Inicializamos Variables        
         double valorEjercicio = 100.0/solucionExamen.length; //O(1)
-        double[] notasEstudiante = new double[estudiantes.length]; // O(1)
+        double[] notasEstudiante = new double[estudiantes.length]; // O(E)
 
         //Insertamos en notasEstudiantes por menor id la nota que tiene respectiva a su puntaje
         for (int i = 0; i < estudiantes.length; i++){ //O(E)
@@ -146,17 +146,17 @@ public class Edr {
                 estudiantes[estudiante].cambiarPosicionExamen(i, estudiantes[estudianteACopiar].obtenerExamen()[i]); //O(1)
                 if (solucionExamen[i] == estudiantes[estudiante].obtenerExamen()[i]){ //O(1)
                     estudiantes[estudiante].cambiarPuntaje(estudiantes[estudiante].obtenerPuntaje() + 1) ; //O(1)
-
-                    //Actualizar el heap
-                    estudiantes[estudiante].actualizarReferencia(estudiantes[estudiante]); //O(log E)
                 }
                 noSeCopio = false; //O(1)
             }
             i++; //O(1)
         } 
+
+        //Actualizar el heap
+        estudiantes[estudiante].actualizarReferencia(estudiantes[estudiante]); //O(log E)
     }  
     
-    //Complejidad total: O(R) + O(R * log E)= O(R * log E)
+    //Complejidad total: O(R) + O(R + log E)= O(R + log E)
     
 //-----------------------------------------------RESOLVER----------------------------------------------------------------
 
@@ -238,7 +238,7 @@ public class Edr {
 
 
         //Inicializamos un heap local y un array de estudiantes que no se hayan copiado.
-        Heap<NotaFinal> heapNotaFinal = new Heap<>(estudiantesNoCopiados);  //O(log E)
+        Heap<NotaFinal> heapNotaFinal = new Heap<>(estudiantesNoCopiados);  //O(1)
         NotaFinal[] estudiantesOrdenados = new NotaFinal[estudiantesNoCopiados]; //O(E)
 
         //Calculamos la nota de cada estudiante
