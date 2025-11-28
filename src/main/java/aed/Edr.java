@@ -238,7 +238,7 @@ public class Edr {
 
 
         //Inicializamos un heap local y un array de estudiantes que no se hayan copiado.
-        Heap<NotaFinal> heapNotaFinal = new Heap<>(estudiantesNoCopiados);  //O(1)
+        Heap<NotaFinal> heapNotaFinal = new Heap<>(estudiantesNoCopiados);  //O(E)
         NotaFinal[] estudiantesOrdenados = new NotaFinal[estudiantesNoCopiados]; //O(E)
 
         //Calculamos la nota de cada estudiante
